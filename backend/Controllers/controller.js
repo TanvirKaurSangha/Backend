@@ -8,6 +8,7 @@ const path=require('path')
 
 //FILE UPLOADING
 
+//jugtdrjhgtdrc
 module.exports.upload=async(req, res) => {
   console.log("File uploaded ")
   try {
