@@ -17,5 +17,10 @@ var UsersSchema=mongoose.Schema({
          required: true
     },
      file: { type: String,required:true,},
+
+     token:{
+         type:String,
+         default:""
+     }
 })
 module.exports = mongoose.model('user', UsersSchema, "user");

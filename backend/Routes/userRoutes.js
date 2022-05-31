@@ -19,7 +19,8 @@ var upload = multer({ storage: Storage });
 
 approute.post("/register",usercontroller.addUser);
 approute.post("/login",usercontroller.loginUser);
-approute.get("/resetpass",auth,usercontroller.resetPass);
+approute.get("/resetpass",usercontroller.resetPass);
 approute.post("/uploads",upload.single("file"),usercontroller.upload);
-approute.patch("/update_user/:id",usercontroller.updateUser)
+approute.patch("/update_user/:id",usercontroller.updateUser);
+approute.post("/forgotpass",usercontroller.forgotpass)
 module.exports=approute;
