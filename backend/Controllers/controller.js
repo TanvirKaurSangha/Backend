@@ -10,9 +10,22 @@ const path=require('path')
 const nodemailer=require("nodemailer");
 const randomstring=require("randomstring");
 
+
+
+module.exports.welcomepage=(req,res)=>{
+   res.render('pages/index')
+}
+
+module.exports.login=(req,res)=>{
+   res.render('pages/login')
+}
+module.exports.register=(req,res)=>{
+   res.render('pages/register')
+}
+
+
 //FILE UPLOADING
 
-//
 module.exports.upload=async(req, res) => {
   console.log("File uploaded ")
   try {
@@ -35,7 +48,6 @@ module.exports.upload=async(req, res) => {
   }
    
 }
-
 
 //REGISTERING A USER
 module.exports.addUser=async(req,res)=>{
@@ -113,7 +125,8 @@ module.exports.loginUser=async(req,res)=>{
     // Get user input
     const { email, password } = req.body;
 
-    
+    console.log("Email is",email);
+    console.log("Password  is",password);
     if (!(email && password)) {
       res.status(400).send("All input is required");
     }
@@ -134,7 +147,13 @@ module.exports.loginUser=async(req,res)=>{
       user.token = token;
 
       // user
-      return res.status(200).json(user);
+     // return res.status(200).json(user);
+     
+     console.log("user",user);
+     let userposts=await Posts.find({postedBy: req.query.user_id}).populate("postedBy","firstname")// here 
+     res.render("pages/dashboard",{articles:userposts});
+     console.log(">>>>>>>><<<<<<<<<<",req.query.userid,userposts);
+     return
       
     }
     res.status(400).send("Invalid Credentials");
@@ -313,11 +332,13 @@ module.exports.fetchposts=async(req,res)=>{
         });
         return;
     }
+
+
     
     let userposts=await Posts.find({postedBy: user_id}).populate("postedBy","lastname")// here are the fields you want to display like lastname etc
    
     console.log("------------------->",user_id,userposts);
-   
+  //  res.render("pages/dashboard",{articles:userposts})
 
     res.status(201).json({
       message:"Posts fetched successfully",

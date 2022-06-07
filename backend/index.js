@@ -21,7 +21,8 @@ var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {
 app.use(morgan('combined', { stream: accessLogStream }))
 app.use(bodyparser.urlencoded({extended:false}))
 app.use(bodyparser.json())
-app.use(express.static('public'));
+// app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -29,8 +30,14 @@ app.use((req, res, next) => {
 });
 
 app.use("/",routes)
-// make the server listen to requests
 
+// app.set('views', path.join(__dirname, '../views'));
+// Set EJS as templating engine
+app.set('view engine', 'ejs');
+
+
+
+// make the server listen to requests
     app.listen(PORT, ()=>{
         console.log("Server is Listening on Port ", PORT);
     })

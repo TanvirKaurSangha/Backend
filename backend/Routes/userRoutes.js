@@ -16,6 +16,13 @@ var Storage = multer.diskStorage({
 })
 
 var upload = multer({ storage: Storage });
+approute.get("/",usercontroller.welcomepage);
+ approute.get("/login",usercontroller.login);
+ approute.get("/register",usercontroller.register)
+
+
+
+
 approute.post("/register",usercontroller.addUser);
 approute.post("/login",usercontroller.loginUser);
 approute.get("/resetpass",usercontroller.resetPass);
