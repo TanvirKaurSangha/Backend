@@ -14,13 +14,14 @@ var Storage = multer.diskStorage({
     }
     
 })
-var upload = multer({ storage: Storage });
-     
 
+var upload = multer({ storage: Storage });
 approute.post("/register",usercontroller.addUser);
 approute.post("/login",usercontroller.loginUser);
 approute.get("/resetpass",usercontroller.resetPass);
 approute.post("/uploads",upload.single("file"),usercontroller.upload);
-approute.patch("/update_user/:id",usercontroller.updateUser);
-approute.post("/forgotpass",usercontroller.forgotpass)
+approute.patch("/update_user/:id",auth,usercontroller.updateUser);
+approute.post("/forgotpass",usercontroller.forgotpass);
+approute.post("/addpost",usercontroller.addpost);
+approute.get("/fetchposts",auth,usercontroller.fetchposts)
 module.exports=approute;

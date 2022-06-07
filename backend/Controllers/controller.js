@@ -1,6 +1,7 @@
 
 const mongoose=require('mongoose');
 var Users=require("../Models/userModel");
+var Posts=require("../Models/postModel")
 const config =require("../Config/config")
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcryptjs');
@@ -11,7 +12,7 @@ const randomstring=require("randomstring");
 
 //FILE UPLOADING
 
-//jugtdrjhgtdrc
+//
 module.exports.upload=async(req, res) => {
   console.log("File uploaded ")
   try {
@@ -241,9 +242,7 @@ module.exports.resetPass=async(req,res)=>{
      console.log(token,"------------Resetpass",tokenData);
      if(tokenData !=null){
        console.log("IF______",tokenData);
-
-
-       const password=req.body.password;
+      const password=req.body.password;
        console.log("password",password);
        const newpassword=await bcrypt.hash(password, 10);
        console.log("Newpassword",newpassword)
@@ -269,3 +268,69 @@ module.exports.resetPass=async(req,res)=>{
             })
    }
 }
+
+module.exports.addpost=async(req,res)=>{
+
+  let {post_content,postedBy}=req.body
+  console.log("REQUEST BODY",req.body);
+  try {
+    let posts=await Posts.create({
+      post_content:post_content,
+      postedBy:postedBy
+    })
+    console.log("POSTS",posts);
+      res.status(201).json({
+              message:"Post Added Successfully",
+              success:true,
+              data:posts  
+     })
+    
+  } 
+    catch (error) {
+  return res.json({
+                status: 400,
+                message: error.message
+            })
+}
+  }
+
+  //Function for checking valid objectid
+
+  function isValidObjectID(parameter, name) {
+  let checkForValidMongoDbID = new RegExp("^[0-9a-fA-F]{24}$");
+  return checkForValidMongoDbID.test(parameter)
+}
+
+  //fetching all the posts of the specific user
+module.exports.fetchposts=async(req,res)=>{
+    console.log("fetchposts",req.query.user_id);
+    try {
+    let user_id=req.query.user_id;
+       if (!user_id || user_id == ''|| isValidObjectID(user_id) === false) {
+        res.json({
+            status: "error",
+            message: "Invalid parameter!"
+        });
+        return;
+    }
+    
+    let userposts=await Posts.find({postedBy: user_id}).populate("postedBy","lastname")// here are the fields you want to display like lastname etc
+   
+    console.log("------------------->",user_id,userposts);
+   
+
+    res.status(201).json({
+      message:"Posts fetched successfully",
+      success:true,
+      data:userposts
+    })
+
+    } catch (error) {
+     console.log(error,'ppppppppppp');
+  return res.json({
+                status: 400,
+                message: error.message
+            })
+    }
+
+  }
